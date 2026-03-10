@@ -60,6 +60,6 @@ jobs:
           tagName: v__VERSION__
           releaseName: 'Hexx Scraper v__VERSION__'
           releaseBody: 'Automated release of Hexx Scraper'
-          releaseDraft: true
+          releaseDraft: false,
           prerelease: false
           projectPath: hexx-scrape
