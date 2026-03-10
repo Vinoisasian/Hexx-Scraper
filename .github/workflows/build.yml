@@ -1,0 +1,65 @@
+name: Build and Release
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+          pip install -r requirements.txt
+          
+      - name: Build Python Sidecar
+        shell: bash
+        run: |
+          pyinstaller --onefile --name python-engine --collect-data browser_use src/main.py --distpath dist --workpath build
+          mkdir -p hexx-scrape/src-tauri/bin
+          if [ "${{ matrix.platform }}" == "windows-latest" ]; then
+            mv dist/python-engine.exe hexx-scrape/src-tauri/bin/python-engine-x86_64-pc-windows-msvc.exe
+          else
+            # For MacOS (Silicon)
+            mv dist/python-engine hexx-scrape/src-tauri/bin/python-engine-aarch64-apple-darwin
+          fi
+
+      - name: Install Frontend Dependencies
+        run: |
+          cd hexx-scrape
+          npm install
+          
+      - name: Build and Release Tauri App
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v__VERSION__
+          releaseName: 'Hexx Scraper v__VERSION__'
+          releaseBody: 'Automated release of Hexx Scraper'
+          releaseDraft: true
+          prerelease: false
+          projectPath: hexx-scrape

@@ -1,0 +1,31 @@
+# ── Python ──
+scraper_env/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+dist/
+build/
+*.spec
+*.egg-info/
+
+# ── Secrets & local config ──
+.env
+creds.json
+
+# ── Brainstorming & Archive ──
+idea/
+old/
+
+# ── Generated artifacts ──
+agent_history.gif
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+
+# ── Tauri build output ──
+hexx-scrape/src-tauri/target/
+hexx-scrape/src-tauri/bin/
+hexx-scrape/node_modules/
+hexx-scrape/dist/
