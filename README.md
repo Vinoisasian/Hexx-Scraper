@@ -1,6 +1,6 @@
 # Hexx Scraper
 
-## 🚀 Powered by Commonstack
+## <image src='./images/commonstack_logo.png' width="30" height="30" style='vertical-align: middle; margin-bottom: 5px;' />Powered by Commonstack
 
 Hexx Scraper is optimized for **[Commonstack](https://commonstack.ai)**, Inference Marketplace for all models.
 
@@ -8,7 +8,7 @@ Hexx Scraper is optimized for **[Commonstack](https://commonstack.ai)**, Inferen
 - **Zero Latency**: Optimized routing for tool-calling agents like Hexx.
 - **Cost Efficient**: Pay-as-you-go with deep discounts on OSS-scale models.
 
-![CommonStack Page](images/commonstack.png)
+![CommonStack Page](images/Commonstack_animated.gif)
 
 ## 📥 Download (Recommended)
 
