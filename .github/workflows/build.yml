@@ -43,23 +43,37 @@ jobs:
           if [ "${{ matrix.platform }}" == "windows-latest" ]; then
             mv dist/python-engine.exe hexx-scrape/src-tauri/bin/python-engine-x86_64-pc-windows-msvc.exe
           else
-            # For MacOS (Silicon)
-            mv dist/python-engine hexx-scrape/src-tauri/bin/python-engine-aarch64-apple-darwin
+            # Dynamically detect architecture for MacOS
+            ARCH=$(uname -m)
+            if [ "$ARCH" == "arm64" ]; then
+              mv dist/python-engine hexx-scrape/src-tauri/bin/python-engine-aarch64-apple-darwin
+            else
+              mv dist/python-engine hexx-scrape/src-tauri/bin/python-engine-x86_64-apple-darwin
+            fi
           fi
 
       - name: Install Frontend Dependencies
         run: |
           cd hexx-scrape
           npm install
-          
+
       - name: Build and Release Tauri App
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: v__VERSION__
-          releaseName: 'Hexx Scraper v__VERSION__'
+          tagName: ${{ github.ref_name }}
+          releaseName: 'Hexx Scraper ${{ github.ref_name }}'
           releaseBody: 'Automated release of Hexx Scraper'
-          releaseDraft: false,
+          releaseDraft: false
           prerelease: false
           projectPath: hexx-scrape
+
+      - name: Upload Binaries (Fallback)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Hexx-Scraper-${{ matrix.platform }}
+          path: |
+            hexx-scrape/src-tauri/target/release/bundle/msi/*.msi
+            hexx-scrape/src-tauri/target/release/bundle/dmg/*.dmg
+
