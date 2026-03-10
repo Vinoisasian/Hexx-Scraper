@@ -60,7 +60,7 @@ export default function Sidebar() {
           {theme === "dark" ? "Light Mode" : "Dark Mode"}
         </button>
         <div className="text-xs text-gray-500">
-          v0.1.0 local
+          v1.0.2 local
         </div>
       </div>
     </aside>
