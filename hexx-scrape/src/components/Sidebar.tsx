@@ -1,10 +1,21 @@
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import { getVersion } from "@tauri-apps/api/app";
 import { LayoutDashboard, Settings, CalendarClock, Moon, Sun } from "lucide-react";
 import { cn } from "../lib/utils";
 import { useTheme } from "../context/ThemeContext";
 
 export default function Sidebar() {
   const { theme, toggleTheme } = useTheme();
+  const [appVersion, setAppVersion] = useState("");
+
+  useEffect(() => {
+    const fetchVersion = async () => {
+      const version = await getVersion();
+      setAppVersion(version);
+    };
+    fetchVersion();
+  }, []);
 
   return (
     <aside className="w-[240px] shrink-0 border-r border-[var(--color-border)] bg-[var(--color-slate-bg)] flex flex-col h-full">
@@ -60,7 +71,7 @@ export default function Sidebar() {
           {theme === "dark" ? "Light Mode" : "Dark Mode"}
         </button>
         <div className="text-xs text-gray-500">
-          v1.0.2 local
+          v{appVersion}
         </div>
       </div>
     </aside>

@@ -38,7 +38,7 @@ jobs:
       - name: Build Python Sidecar
         shell: bash
         run: |
-          pyinstaller --onefile --name python-engine --collect-data browser_use src/main.py --distpath dist --workpath build
+          pyinstaller --onefile --name python-engine --collect-data browser_use --hidden-import=browser_use.browser.browser src/main.py --distpath dist --workpath build
           mkdir -p hexx-scrape/src-tauri/bin
           if [ "${{ matrix.platform }}" == "windows-latest" ]; then
             mv dist/python-engine.exe hexx-scrape/src-tauri/bin/python-engine-x86_64-pc-windows-msvc.exe
