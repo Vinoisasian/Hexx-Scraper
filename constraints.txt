@@ -1,0 +1,17 @@
+# Transitive pins validated with the Hexx Scraper sidecar on Python 3.12.
+# Install with: pip install -r requirements.txt -c constraints.txt
+
+langchain==0.3.14
+langchain-anthropic==0.3.3
+langchain-aws==0.2.24
+langchain-core==0.3.63
+langchain-fireworks==0.3.0
+langchain-google-genai==2.0.8
+langchain-ollama==0.2.2
+langchain-text-splitters==0.3.8
+lmnr==0.7.42
+httpx==0.28.1
+openai==1.109.1
+pydantic==2.12.5
+setuptools==82.0.0
+posthog==7.9.7

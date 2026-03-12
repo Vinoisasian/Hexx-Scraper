@@ -80,18 +80,37 @@ When you run the script for the first time, Google will require authorization:
 If you want to modify the code or build it yourself, follow these steps:
 
 ### Windows
-1. Double-click **`setup.bat`**. This will create your environment and install all dependencies automatically.
-2. Once finished, double-click **`run.bat`** to launch the application.
+1. Install **Python 3.11+**, **Node.js 20+**, and **Rust**.
+2. Double-click **`setup.bat`**. This creates the Python 3.11+ virtualenv, installs the pinned sidecar dependencies, and downloads the Playwright Chromium runtime for developer builds.
+3. Once finished, double-click **`run.bat`** to launch the application.
 
 ### macOS / Linux
-1. Open your terminal in this folder.
-2. Run `./setup.sh`.
-3. Once finished, run `./run.sh` to launch the application.
+1. Install **Python 3.11+**, **Node.js 20+**, and **Rust**.
+2. Open your terminal in this folder.
+3. Run `./setup.sh`.
+4. Once finished, run `./run.sh` to launch the application.
 
 ---
 
 ## 🔑 Prerequisites (For Developers)
 If building from source, you will need:
-- **Python 3.10+**
+- **Python 3.11+**
 - **Node.js 20+**
 - **Rust** (Stable)
+
+## 🧱 Python Sidecar Build Notes
+
+- The Python sidecar is pinned to **`browser-use==0.1.37`**, which matches the API this project was written against.
+- Install Python dependencies with `pip install -r requirements.txt -c constraints.txt`.
+- The PyInstaller build is centralized in `scripts/build_sidecar.py`, which:
+  - runs a pre-package import smoke test,
+  - builds from `python-engine.spec`,
+  - verifies the frozen archive contains the required `browser_use` modules,
+  - copies the binary into `hexx-scrape/src-tauri/bin/`.
+
+### Rebuild The Sidecar Manually
+
+```bash
+source scraper_env/bin/activate
+python scripts/build_sidecar.py
+```

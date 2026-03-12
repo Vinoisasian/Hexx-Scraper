@@ -32,25 +32,12 @@ jobs:
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pyinstaller
-          pip install -r requirements.txt
+          pip install -r requirements.txt -c constraints.txt
           
       - name: Build Python Sidecar
         shell: bash
         run: |
-          pyinstaller --onefile --name python-engine --collect-data browser_use --hidden-import=browser_use.browser.browser src/main.py --distpath dist --workpath build
-          mkdir -p hexx-scrape/src-tauri/bin
-          if [ "${{ matrix.platform }}" == "windows-latest" ]; then
-            mv dist/python-engine.exe hexx-scrape/src-tauri/bin/python-engine-x86_64-pc-windows-msvc.exe
-          else
-            # Dynamically detect architecture for MacOS
-            ARCH=$(uname -m)
-            if [ "$ARCH" == "arm64" ]; then
-              mv dist/python-engine hexx-scrape/src-tauri/bin/python-engine-aarch64-apple-darwin
-            else
-              mv dist/python-engine hexx-scrape/src-tauri/bin/python-engine-x86_64-apple-darwin
-            fi
-          fi
+          python scripts/build_sidecar.py
 
       - name: Install Frontend Dependencies
         run: |
@@ -76,4 +63,3 @@ jobs:
           path: |
             hexx-scrape/src-tauri/target/release/bundle/msi/*.msi
             hexx-scrape/src-tauri/target/release/bundle/dmg/*.dmg
-

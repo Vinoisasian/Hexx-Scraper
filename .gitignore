@@ -6,7 +6,9 @@ __pycache__/
 *.pyo
 dist/
 build/
+.pyinstaller/
 *.spec
+!python-engine.spec
 *.egg-info/
 
 # ── Secrets & local config ──

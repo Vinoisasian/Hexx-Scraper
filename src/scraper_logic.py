@@ -15,8 +15,12 @@ import logging
 import requests
 from typing import Optional
 
-from browser_use import Agent
-from browser_use.browser.browser import Browser, BrowserConfig
+from browser_use import Agent, Browser
+
+try:
+    from browser_use import BrowserConfig
+except ImportError:
+    BrowserConfig = None
 from langchain_openai import ChatOpenAI
 
 from src.config import load_settings
@@ -44,7 +48,10 @@ def _get_browser():
     global _browser
     if _browser is None:
         cfg = load_settings()
-        _browser = Browser(config=BrowserConfig(headless=cfg["headless"]))
+        if BrowserConfig is not None:
+            _browser = Browser(config=BrowserConfig(headless=cfg["headless"]))
+        else:
+            _browser = Browser(headless=cfg["headless"])
     return _browser
 
 
