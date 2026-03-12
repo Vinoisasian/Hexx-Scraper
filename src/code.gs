@@ -57,8 +57,8 @@ function initializeSheets() {
       ];
     }
     
-    // Set headers
-    const headerRange = sheet.getRange(1, 1, 1, headers.length);
+    // Set headers starting from column D
+    const headerRange = sheet.getRange(1, 4, 1, headers.length);
     headerRange.setValues([headers]);
     
     // Style headers
@@ -66,14 +66,18 @@ function initializeSheets() {
     headerRange.setBackground("#1e293b"); // Slate Noir Surface color
     headerRange.setFontColor("#f1f5f9");  // Slate Noir Text color
     headerRange.setHorizontalAlignment("center");
+
+    // Create and style the empty headers for A, B, C
+    const emptyHeaderRange = sheet.getRange(1, 1, 1, 3);
+    emptyHeaderRange.setBackground("#1e293b");
     
     // Freeze the top row so it stays visible when scrolling
     sheet.setFrozenRows(1);
     
     // Auto-resize columns for better fit
-    sheet.autoResizeColumns(1, headers.length);
+    sheet.autoResizeColumns(4, headers.length);
     // Give the URL column a bit more breathing room manually
-    sheet.setColumnWidth(1, 300);
+    sheet.setColumnWidth(4, 300);
   });
   
   SpreadsheetApp.getUi().alert('Initialization Complete', `Created and styled sheets: ${DEFAULT_SHEETS.join(", ")}.`, SpreadsheetApp.getUi().ButtonSet.OK);
@@ -107,7 +111,7 @@ function doPost(e) {
   ).setMimeType(ContentService.MimeType.JSON);
 }
 
-// ── GET: Return all URLs from Column A ────────────────────────
+// ── GET: Return all URLs from Column D ────────────────────────
 function _getUrls(targetSheetName) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   
@@ -120,7 +124,7 @@ function _getUrls(targetSheetName) {
     if (sheet) {
       const lastRow = sheet.getLastRow();
       if (lastRow >= 2) {
-        const range = sheet.getRange(2, 1, lastRow - 1, 1);
+        const range = sheet.getRange(2, 4, lastRow - 1, 1);
         const values = range.getValues();
         const urls = values.map(row => row[0]).filter(v => v && v.toString().trim());
         allUrls = allUrls.concat(urls);
@@ -154,7 +158,7 @@ function _writeResults(results, targetSheetName) {
     const lastRow = sheet.getLastRow();
     if (lastRow < 2) continue; // No URLs to match against
 
-    const urlRange = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+    const urlRange = sheet.getRange(2, 4, lastRow - 1, 1).getValues();
 
     // Find the row matching this URL
     for (let i = 0; i < urlRange.length; i++) {
@@ -162,18 +166,18 @@ function _writeResults(results, targetSheetName) {
         const row = i + 2; // offset for header + 0-index
 
         if (platform === "X") {
-          sheet.getRange(row, 2).setValue(data.likes || "");                    // B: Likes
-          sheet.getRange(row, 3).setValue(data.replies || "");                  // C: Replies
-          sheet.getRange(row, 4).setValue(data.reposts || "");                  // D: Reposts
+          sheet.getRange(row, 5).setValue(data.likes || "");      // E: Likes
+          sheet.getRange(row, 6).setValue(data.replies || "");    // F: Replies
+          sheet.getRange(row, 7).setValue(data.reposts || "");    // G: Reposts
         } else {
-          sheet.getRange(row, 2).setValue(data.likes || data.upvotes || "");    // B: Likes/Upvotes
-          sheet.getRange(row, 3).setValue(data.comments || "");                 // C: Comments
-          sheet.getRange(row, 4).setValue(data.shares || "");                   // D: Shares
+          sheet.getRange(row, 5).setValue(data.likes || data.upvotes || ""); // E: Likes/Upvotes
+          sheet.getRange(row, 6).setValue(data.comments || "");   // F: Comments
+          sheet.getRange(row, 7).setValue(data.shares || "");     // G: Shares
         }
         
-        sheet.getRange(row, 5).setValue(data.views || "");                       // E: Views
-        sheet.getRange(row, 6).setValue(new Date());                             // F: Last Updated
-        sheet.getRange(row, 7).setValue(status === "ok" ? "✅ Done" : "❌ " + (item.error || "Failed"));  // G: Status
+        sheet.getRange(row, 8).setValue(data.views || "");         // H: Views
+        sheet.getRange(row, 9).setValue(new Date());               // I: Last Updated
+        sheet.getRange(row, 10).setValue(status === "ok" ? "✅ Done" : "❌ " + (item.error || "Failed"));  // J: Status
 
         written++;
         break;

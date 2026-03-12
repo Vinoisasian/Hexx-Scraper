@@ -16,7 +16,7 @@ set BIN_PATH=hexx-scrape\src-tauri\bin\python-engine-x86_64-pc-windows-msvc.exe
 if not exist %BIN_PATH% (
     echo [INFO] Building Python Sidecar binary...
     pip install pyinstaller
-    pyinstaller --onefile --name python-engine --collect-data browser_use src/main.py --distpath dist --workpath build
+    pyinstaller --onefile --name python-engine --collect-data browser_use --hidden-import=browser_use.browser.browser src/main.py --distpath dist --workpath build
     mkdir hexx-scrape\src-tauri\bin
     move dist\python-engine.exe %BIN_PATH%
 )

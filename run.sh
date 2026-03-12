@@ -22,7 +22,7 @@ BIN_PATH="hexx-scrape/src-tauri/bin/python-engine-$TRIPLE"
 if [ ! -f "$BIN_PATH" ]; then
     echo "[INFO] Building Python Sidecar binary for $TRIPLE..."
     pip install pyinstaller
-    pyinstaller --onefile --name python-engine --collect-data browser_use src/main.py --distpath dist --workpath build
+    pyinstaller --onefile --name python-engine --collect-data browser_use --hidden-import=browser_use.browser.browser src/main.py --distpath dist --workpath build
     mkdir -p hexx-scrape/src-tauri/bin
     mv dist/python-engine "$BIN_PATH"
 fi
